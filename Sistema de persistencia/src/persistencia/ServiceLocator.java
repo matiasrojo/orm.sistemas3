@@ -1,6 +1,6 @@
 package persistencia;
 
-import gestorprueba.prueba;
+import java.util.HashMap;
 
 public class ServiceLocator {
 
@@ -23,7 +23,18 @@ public class ServiceLocator {
 
 	public void loadSG()
 	{
-		db = new prueba();
+		try {
+
+			HashMap<String, String> parameters = LectorXML.loadConfiguration();
+			
+			Class<?> c = Class.forName(parameters.get("clase"));
+			db = (SistemaGestor) c.newInstance();
+			
+		} catch (InstantiationException | IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public SistemaGestor getSG()
