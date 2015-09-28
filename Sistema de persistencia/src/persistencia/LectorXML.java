@@ -15,25 +15,32 @@ public class LectorXML {
 	
 	public static HashMap<String, String> loadConfiguration()
 	{
-		HashMap<String, String> respond = new HashMap<String, String>();		
+		HashMap<String, String> respond = new HashMap<String, String>();
+		
 		Document document = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder;
 		
 		try {
+			
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(LectorXML.class.getResourceAsStream("conf.xml"));
 			
 			NodeList listgestor = document.getElementsByTagName("SistemaGestor");
+			
 			for (int i = 0; i < listgestor.getLength(); i++) {
+				
 				Element sistemagestor = (Element) listgestor.item(i);
 				respond.put("SistemaGestor",(sistemagestor.getAttribute("name")));
 				NodeList listparametro = sistemagestor.getElementsByTagName("Parametro");
+				
 				for (int j = 0; j < listparametro.getLength(); j++) {
+					
 					Element parametro = (Element) listparametro.item(j);
 					respond.put(parametro.getAttribute("name"),(parametro.getAttribute("value")));
 				}
 			}
+			
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -41,8 +48,6 @@ public class LectorXML {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		respond.put("clase", "gestorprueba.prueba");
 		
 		return respond;
 	}

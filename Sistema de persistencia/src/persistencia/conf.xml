@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SistemasGestores>
-	<SistemaGestor name="MySql">
+	<SistemaGestor name="Gestor de Prueba">
+		<Parametro name="Clase" value='gestorprueba.prueba'></Parametro>
 		<Parametro name="Usuario" value="Pepe"/>
 		<Parametro name="Password" value="1234"/>
 	</SistemaGestor>

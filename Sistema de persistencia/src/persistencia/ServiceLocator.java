@@ -25,10 +25,16 @@ public class ServiceLocator {
 	{
 		try {
 
+			System.out.println("\nSERVICE LOCATOR> Cargando el Sistema Gestor de Base de Datos...");
+			
 			HashMap<String, String> parameters = LectorXML.loadConfiguration();
 			
-			Class<?> c = Class.forName(parameters.get("clase"));
-			db = (SistemaGestor) c.newInstance();
+			Class<?> c = Class.forName(parameters.get("Clase"));
+			this.db = (SistemaGestor) c.newInstance();
+			
+			System.out.println("SERVICE LOCATOR> Se ha cargado el Sistema Gestor: " + parameters.get("SistemaGestor"));
+			
+			this.db.setConfigurations(parameters);
 			
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
@@ -39,7 +45,7 @@ public class ServiceLocator {
 
 	public SistemaGestor getSG()
 	{
-		return db;
+		return this.db;
 	}
 
 }

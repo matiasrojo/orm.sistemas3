@@ -1,9 +1,11 @@
 package persistencia;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface SistemaGestor {
 	
+	public void setConfigurations(HashMap<String, String> parameters);
 	public ArrayList<Atributo> load(int id);
 	public void save(ArrayList<Atributo> campos, int id);
 }
