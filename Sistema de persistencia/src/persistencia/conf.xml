@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SistemasGestores>
-	<SistemaGestor name="Gestor de Prueba">
-		<Parametro name="Clase" value='gestorprueba.prueba'></Parametro>
-		<Parametro name="Usuario" value="Pepe"/>
-		<Parametro name="Password" value="1234"/>
+	<SistemaGestor name="Firebird">
+		<Parametro name="Clase" value='firebird.firebird'></Parametro>
+		<Parametro name="User" value="sysdba"/>
+		<Parametro name="Password" value="masterkey"/><Parametro
+			name="Database" value="C:\Users\Matias Ignacio Rojo\git\orm.sistemas3\Sistema de persistencia\src\firebird\PERSONA.FDB">
+</Parametro>
 	</SistemaGestor>
 </SistemasGestores>
