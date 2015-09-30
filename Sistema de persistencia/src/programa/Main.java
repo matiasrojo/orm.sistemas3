@@ -1,8 +1,12 @@
 package programa;
 
+import persistencia.ServiceLocator;
+
 public class Main {
 
 	public static void main(String[] args) {
+		
+		ServiceLocator.getInstance().selectPersisterObject("Firebird");
 		
 		Persona personita = new Persona();
 		

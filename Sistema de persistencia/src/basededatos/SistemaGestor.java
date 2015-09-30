@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import persistencia.Atributo;
 import persistencia.IMedio;
@@ -21,17 +20,6 @@ public class SistemaGestor implements IMedio {
 	private String dbname;
 	private String user;
 	private String password;
-
-	
-	public void setConfigurations(HashMap<String, String> parameters) {
-
-		this.driver = parameters.get("Driver");
-		this.connectionstring = parameters.get("ConnectionString");
-		this.sgbdname = parameters.get("MedioPersistencia");
-		this.dbname = parameters.get("Database");
-		this.user = parameters.get("User");
-		this.password = parameters.get("Password");
-	}
 	
 	private Connection connectDB()
 	{
@@ -100,6 +88,11 @@ public class SistemaGestor implements IMedio {
 	public void save(ArrayList<Atributo> campos, int id) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String getName() {
+		return this.sgbdname;
 	}
 
 }

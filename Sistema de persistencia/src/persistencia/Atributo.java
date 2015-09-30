@@ -6,6 +6,8 @@ public class Atributo {
 	private Class<?> type;
 	private String value;
 
+	public Atributo(){}
+	
 	public Atributo(String name, Class<?> type, String value)
 	{
 		this.name = name;
