@@ -85,12 +85,12 @@ public abstract class Motor {
 	public void save()
 	{
 		this.refreshChildAtributtesValues();
-		this.proveedor.getSG().save(this.childatributtes, 1);
+		this.proveedor.getPersisterObject().save(this.childatributtes, 1);
 	}
 
 	public void load(int id)
 	{
-		this.childatributtes = this.proveedor.getSG().load(id);
+		this.childatributtes = this.proveedor.getPersisterObject().load(id);
 		this.setChildAtributtes();
 	}
 }

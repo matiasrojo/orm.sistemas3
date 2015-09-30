@@ -5,11 +5,11 @@ import java.util.HashMap;
 public class ServiceLocator {
 
 	private static ServiceLocator instance = new ServiceLocator();
-	private SistemaGestor db;
+	private IMedio persistenceobject;
 
 	private ServiceLocator() 
 	{
-		this.loadSG();
+		this.loadPersisterObject();
 	}
 
 	public static ServiceLocator getInstance() {
@@ -21,20 +21,20 @@ public class ServiceLocator {
 		return instance;
 	}
 
-	public void loadSG()
+	public void loadPersisterObject()
 	{
 		try {
 
-			System.out.println("\nSERVICE LOCATOR> Cargando el Sistema Gestor de Base de Datos...");
+			System.out.println("\nSERVICE LOCATOR> Cargando el medio de persistencia ...");
 			
 			HashMap<String, String> parameters = LectorXML.loadConfiguration();
 			
-			Class<?> c = Class.forName(parameters.get("Clase"));
-			this.db = (SistemaGestor) c.newInstance();
+			Class<?> c = Class.forName(parameters.get("Class"));
+			this.persistenceobject = (IMedio) c.newInstance();
 			
-			System.out.println("SERVICE LOCATOR> Se ha cargado el Sistema Gestor: " + parameters.get("SistemaGestor"));
+			System.out.println("SERVICE LOCATOR> Se ha cargado el medio de persistencia: " + parameters.get("MedioPersistencia"));
 			
-			this.db.setConfigurations(parameters);
+			this.persistenceobject.setConfigurations(parameters);
 			
 		} catch (InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
@@ -43,9 +43,9 @@ public class ServiceLocator {
 		}
 	}
 
-	public SistemaGestor getSG()
+	public IMedio getPersisterObject()
 	{
-		return this.db;
+		return this.persistenceobject;
 	}
 
 }

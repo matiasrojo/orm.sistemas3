@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<SistemasGestores>
-	<SistemaGestor name="Firebird">
-		<Parametro name="Clase" value='firebird.firebird'></Parametro>
+<MediosPersistencia>
+	<MedioPersistencia name="Firebird">
+		<Parametro name="Class" value="basededatos.SistemaGestor"></Parametro>
+		<Parametro name="Driver" value="org.firebirdsql.jdbc.FBDriver"></Parametro>
+		<Parametro name="ConnectionString" value='jdbc:firebirdsql://localhost/'></Parametro>
 		<Parametro name="User" value="sysdba"/>
 		<Parametro name="Password" value="masterkey"/><Parametro
-			name="Database" value="C:\Users\Matias Ignacio Rojo\git\orm.sistemas3\Sistema de persistencia\src\firebird\PERSONA.FDB">
+			name="Database" value="C:\Users\Matias Ignacio Rojo\git\orm.sistemas3\Sistema de persistencia\src\basededatos\PERSONA.FDB">
 </Parametro>
-	</SistemaGestor>
-</SistemasGestores>
+	</MedioPersistencia>
+</MediosPersistencia>

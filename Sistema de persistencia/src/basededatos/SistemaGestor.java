@@ -1,4 +1,4 @@
-package firebird;
+package basededatos;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,14 +11,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import persistencia.Atributo;
-import persistencia.SistemaGestor;
+import persistencia.IMedio;
 
-public class firebird implements SistemaGestor {
+public class SistemaGestor implements IMedio {
 
-	private String db;
+	private String driver;
+	private String sgbdname;
+	private String connectionstring;
+	private String dbname;
 	private String user;
 	private String password;
 
+	
+	public void setConfigurations(HashMap<String, String> parameters) {
+
+		this.driver = parameters.get("Driver");
+		this.connectionstring = parameters.get("ConnectionString");
+		this.sgbdname = parameters.get("MedioPersistencia");
+		this.dbname = parameters.get("Database");
+		this.user = parameters.get("User");
+		this.password = parameters.get("Password");
+	}
 	
 	private Connection connectDB()
 	{
@@ -26,12 +39,12 @@ public class firebird implements SistemaGestor {
 		
 		try{
 			
-			System.out.println("\nFIREBIRD> Conectando a la base de datos " + this.db + " ..." );
+			System.out.println("\n" + this.sgbdname.toUpperCase() + "> Conectando a la base de datos " + this.dbname + " ..." );
 
-			Class.forName("org.firebirdsql.jdbc.FBDriver");
-			connection = DriverManager.getConnection("jdbc:firebirdsql://localhost/" + this.db, this.user, this.password);
+			Class.forName(this.driver);
+			connection = DriverManager.getConnection(this.connectionstring + this.dbname, this.user, this.password);
 
-			System.out.println("FIREBIRD> Conexión realizada.");
+			System.out.println(this.sgbdname.toUpperCase() + "> Conexión realizada.");
 
 		}catch(Exception e){
 			System.out.println(e);
@@ -40,23 +53,13 @@ public class firebird implements SistemaGestor {
 		return connection;
 	}
 
-	@Override
-	public void setConfigurations(HashMap<String, String> parameters) {
-
-		this.db = parameters.get("Database");
-		this.user = parameters.get("User");
-		this.password = parameters.get("Password");
-
-	}
-
-	@Override
 	public ArrayList<Atributo> load(int id) {
 		
 		ArrayList<Atributo> respond = new ArrayList<Atributo>();
 		
 		try {
 			
-			System.out.println("\nFIREBIRD> obteniendo la tupla con ID = " + id + " ..." );
+			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo la tupla con ID = " + id + " ..." );
 			
 			Statement statement = this.connectDB().createStatement();
 			ResultSet rs = null;
@@ -88,12 +91,12 @@ public class firebird implements SistemaGestor {
 			System.out.println(ex);
 		}
 		
-		System.out.println("FIREBIRD> tupla obtenida." );
+		System.out.println(this.sgbdname.toUpperCase() + "> tupla obtenida." );
 		
 		return respond;
 	}
 
-	@Override
+	
 	public void save(ArrayList<Atributo> campos, int id) {
 		// TODO Auto-generated method stub
 

@@ -26,12 +26,12 @@ public class LectorXML {
 			builder = factory.newDocumentBuilder();
 			document = builder.parse(LectorXML.class.getResourceAsStream("conf.xml"));
 			
-			NodeList listgestor = document.getElementsByTagName("SistemaGestor");
+			NodeList listgestor = document.getElementsByTagName("MedioPersistencia");
 			
 			for (int i = 0; i < listgestor.getLength(); i++) {
 				
 				Element sistemagestor = (Element) listgestor.item(i);
-				respond.put("SistemaGestor",(sistemagestor.getAttribute("name")));
+				respond.put("MedioPersistencia",(sistemagestor.getAttribute("name")));
 				NodeList listparametro = sistemagestor.getElementsByTagName("Parametro");
 				
 				for (int j = 0; j < listparametro.getLength(); j++) {
