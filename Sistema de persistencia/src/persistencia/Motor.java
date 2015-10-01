@@ -5,23 +5,26 @@ import java.util.ArrayList;
 
 public abstract class Motor {
 
-	protected int id;
+	public static int id = 0;
 	private ServiceLocator proveedor;
-	private String childtablename;
+	private String childTableName;
+	private int instanceId;
 
 	
 	public Motor()
 	{
 		this.getChildTableName();
 		this.proveedor = ServiceLocator.getInstance();
+		Motor.id += 1;
+		this.instanceId = Motor.id;
 	}
 	
 	private void getChildTableName()
 	{
-		this.childtablename = this.getClass().getAnnotation(Table.class).name();
+		this.childTableName = this.getClass().getAnnotation(Table.class).name();
 	}
 
-	private ArrayList<Atributo> getChildAtributtes()
+	private ArrayList<Atributo> getChildAttributes()
 	{
 		
 		ArrayList<Atributo> respond = new ArrayList<Atributo>();
@@ -31,7 +34,12 @@ public abstract class Motor {
 			field.setAccessible(true);
 
 			try {
-				respond.add(new Atributo(field.getName(), field.getType(), (String) field.get(this)));
+				if(field.get(this) instanceof Motor) {
+					Motor obj = (Motor) field.get(this);
+					respond.add(new Atributo(field.getName(), int.class, (String) String.valueOf(obj.getInstanceId())));
+				} else {
+					respond.add(new Atributo(field.getName(), field.getType(), (String) field.get(this)));
+				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -40,26 +48,26 @@ public abstract class Motor {
 		return respond;
 	}
 
-	private void setChildAtributtes(ArrayList<Atributo> attributes)
+	private void setChildAttributes(ArrayList<Atributo> attributes)
 	{
-		for(Atributo atributte : attributes)
+		for(Atributo attribute : attributes)
 		{
 			try {
 
 				/**
-				 * Hay que hacer esta validación, ya que la reflexión no conoce
+				 * Hay que hacer esta validaciï¿½n, ya que la reflexiï¿½n no conoce
 				 * los atributos protected del hijo
 				 */
-				if (atributte.getName().equals("id"))
+				if (attribute.getName().equals("id"))
 				{
-					this.getClass().getSuperclass().getDeclaredField("id").set(this, atributte.getValue());
+					//this.getClass().getSuperclass().getDeclaredField("instanceId").set(this, attribute.getValue());
 				}
 				else
 				{
-					Field field = this.getClass().getDeclaredField(atributte.getName());
+					Field field = this.getClass().getDeclaredField(attribute.getName());
 					
 					field.setAccessible(true);
-					field.set(this, atributte.getValue());
+					field.set(this, attribute.getValue());
 				}
 
 			} catch (IllegalArgumentException |  NoSuchFieldException | SecurityException e) {
@@ -74,11 +82,17 @@ public abstract class Motor {
 
 	public void save()
 	{
-		this.proveedor.getPersisterObject().save(this.childtablename, this.getChildAtributtes(), 1);
+		this.proveedor.getPersisterObject().save(this.childTableName, this.getChildAttributes(), this.instanceId);
 	}
 
-	public void load(int id)
+	public Motor load(int id)
 	{
-		this.setChildAtributtes(this.proveedor.getPersisterObject().load(this.childtablename, id));
+		this.setChildAttributes(this.proveedor.getPersisterObject().load(this.childTableName, id));
+		this.instanceId = id;
+		return this;
+	}
+	
+	public int getInstanceId() {
+		return this.instanceId;
 	}
 }

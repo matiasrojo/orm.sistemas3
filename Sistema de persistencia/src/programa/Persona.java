@@ -7,11 +7,10 @@ import persistencia.Motor;
 public class Persona extends Motor {
 
 	private String name;
-	private String lastname;
-	
+	private String lastname;	
 	
 	public String getName() {
-		return name;
+		return this.name;
 	}
 	public void setName(String name) {
 		this.name = name;

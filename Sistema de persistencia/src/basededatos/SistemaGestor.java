@@ -20,28 +20,29 @@ public class SistemaGestor implements IMedio {
 	private String dbname;
 	private String user;
 	private String password;
+	private Connection connection = null;
 	
 	private Connection connectDB()
 	{
-		Connection connection = null;
-		
-		try{
-			
-			System.out.println("\n" + this.sgbdname.toUpperCase() + "> Conectando a la base de datos " + this.dbname + " ..." );
-
-			Class.forName(this.driver);
-			connection = DriverManager.getConnection(this.connectionstring + this.dbname, this.user, this.password);
-
-			System.out.println(this.sgbdname.toUpperCase() + "> Conexión realizada.");
-
-		}catch(Exception e){
-			System.out.println(e);
+		if(connection == null) {
+			try{
+				
+				System.out.println("\n" + this.sgbdname.toUpperCase() + "> Conectando a la base de datos " + this.dbname + " ..." );
+	
+				Class.forName(this.driver);
+				connection = DriverManager.getConnection(this.connectionstring + this.dbname, this.user, this.password);
+	
+				System.out.println(this.sgbdname.toUpperCase() + "> Conexiï¿½n realizada.");
+	
+			}catch(Exception e){
+				System.out.println(e);
+			}
 		}
 		
 		return connection;
 	}
-
-	public ArrayList<Atributo> load(String table, int id) {
+	
+	public ArrayList<Atributo> load(String tableName, int id) {
 		
 		ArrayList<Atributo> respond = new ArrayList<Atributo>();
 		
@@ -53,7 +54,7 @@ public class SistemaGestor implements IMedio {
 			ResultSet rs = null;
 			Class<?> type_class = null;
 			
-			rs = statement.executeQuery("SELECT * FROM PERSONA WHERE ID  = " + id);
+			rs = statement.executeQuery("SELECT * FROM " + tableName + " WHERE ID  = " + id);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			
 			while (rs.next())
@@ -83,16 +84,50 @@ public class SistemaGestor implements IMedio {
 		
 		return respond;
 	}
-
 	
-	public void save(String table, ArrayList<Atributo> campos, int id) {
-		// TODO Auto-generated method stub
-
+	public void save(String tableName, ArrayList<Atributo> campos, int id) {
+		Connection connection = null;
+		
+		try {
+			connection = this.connectDB();
+			connection.setAutoCommit(false);
+			Statement statement = connection.createStatement();
+			
+			String query = "UPDATE OR INSERT INTO " + tableName + "(ID";
+			for(Atributo campo: campos)
+				query += ", " + campo.getName().toUpperCase();
+			
+			query += ") VALUES(" + String.valueOf(id);
+			
+			for(Atributo campo: campos) {
+				System.out.println(campo.getName());
+				System.out.println(campo.getType());
+				System.out.println(campo.getValue());
+				if(campo.getType() == String.class)
+					query += ", '" + campo.getValue() + "'";
+				else
+					query += ", " + campo.getValue();
+			}
+			query += ");";
+			
+			System.out.println("\nEjecutando consulta " + query);
+			statement.addBatch(query);
+			statement.executeBatch();
+			connection.commit();
+		} catch(SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public String getName() {
 		return this.sgbdname;
 	}
-
 }
