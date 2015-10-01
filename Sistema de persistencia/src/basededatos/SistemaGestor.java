@@ -41,7 +41,7 @@ public class SistemaGestor implements IMedio {
 		return connection;
 	}
 
-	public ArrayList<Atributo> load(int id) {
+	public ArrayList<Atributo> load(String table, int id) {
 		
 		ArrayList<Atributo> respond = new ArrayList<Atributo>();
 		
@@ -85,7 +85,7 @@ public class SistemaGestor implements IMedio {
 	}
 
 	
-	public void save(ArrayList<Atributo> campos, int id) {
+	public void save(String table, ArrayList<Atributo> campos, int id) {
 		// TODO Auto-generated method stub
 
 	}

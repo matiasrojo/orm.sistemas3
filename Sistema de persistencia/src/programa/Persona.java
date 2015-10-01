@@ -1,7 +1,9 @@
 package programa;
 
+import persistencia.Table;
 import persistencia.Motor;
 
+@Table(name = "Persona")
 public class Persona extends Motor {
 
 	private String name;

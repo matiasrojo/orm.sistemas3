@@ -7,11 +7,18 @@ public abstract class Motor {
 
 	protected int id;
 	private ServiceLocator proveedor;
+	private String childtablename;
 
 	
 	public Motor()
 	{
+		this.getChildTableName();
 		this.proveedor = ServiceLocator.getInstance();
+	}
+	
+	private void getChildTableName()
+	{
+		this.childtablename = this.getClass().getAnnotation(Table.class).name();
 	}
 
 	private ArrayList<Atributo> getChildAtributtes()
@@ -67,11 +74,11 @@ public abstract class Motor {
 
 	public void save()
 	{
-		this.proveedor.getPersisterObject().save(this.getChildAtributtes(), 1);
+		this.proveedor.getPersisterObject().save(this.childtablename, this.getChildAtributtes(), 1);
 	}
 
 	public void load(int id)
 	{
-		this.setChildAtributtes(this.proveedor.getPersisterObject().load(id));
+		this.setChildAtributtes(this.proveedor.getPersisterObject().load(this.childtablename, id));
 	}
 }
