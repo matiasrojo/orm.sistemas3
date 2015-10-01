@@ -30,7 +30,7 @@ public class Main {
 		personita2.setLastname("Torres");
 		personita2.save();*/
 		
-		Perro perro = (Perro) new Perro().load(3);
+		Perro perro = (Perro) new Perro().load(1);
 		
 		/*perro.setName("Zack");
 		perro.setDuenio(personita2);
@@ -49,7 +49,7 @@ public class Main {
 		persona.save();
 		perro.save();*/
 		
-		Perro perro2 = (Perro) new Perro().load(4);
+		Perro perro2 = (Perro) new Perro().load(2);
 		
 		System.out.println("\nEl dueño de " + perro2.getName() + " es " + perro2.getDuenio().getName());
 	}
