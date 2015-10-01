@@ -6,53 +6,36 @@ import java.util.ArrayList;
 public abstract class Motor {
 
 	protected int id;
-
-	private ArrayList<Atributo> childatributtes;
 	private ServiceLocator proveedor;
 
+	
 	public Motor()
 	{
 		this.proveedor = ServiceLocator.getInstance();
-		this.loadChildAtributtes();
 	}
 
-	private void loadChildAtributtes()
+	private ArrayList<Atributo> getChildAtributtes()
 	{
-		this.childatributtes = new ArrayList<Atributo>();
-
+		
+		ArrayList<Atributo> respond = new ArrayList<Atributo>();
+		
 		for (Field field : this.getClass().getDeclaredFields()) {
 
 			field.setAccessible(true);
 
 			try {
-				childatributtes.add(new Atributo(field.getName(), field.getType(), (String) field.get(this)));
+				respond.add(new Atributo(field.getName(), field.getType(), (String) field.get(this)));
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		return respond;
 	}
 
-	private void refreshChildAtributtesValues()
+	private void setChildAtributtes(ArrayList<Atributo> attributes)
 	{
-		int i = 0;
-
-		for (Field field : this.getClass().getDeclaredFields()) {
-
-			field.setAccessible(true);
-
-			try {
-				childatributtes.get(i).setValue((String) field.get(this));
-			} catch (IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-
-			i++;
-		}
-	}
-
-	private void setChildAtributtes()
-	{
-		for(Atributo atributte : this.childatributtes)
+		for(Atributo atributte : attributes)
 		{
 			try {
 
@@ -84,13 +67,11 @@ public abstract class Motor {
 
 	public void save()
 	{
-		this.refreshChildAtributtesValues();
-		this.proveedor.getPersisterObject().save(this.childatributtes, 1);
+		this.proveedor.getPersisterObject().save(this.getChildAtributtes(), 1);
 	}
 
 	public void load(int id)
 	{
-		this.childatributtes = this.proveedor.getPersisterObject().load(id);
-		this.setChildAtributtes();
+		this.setChildAtributtes(this.proveedor.getPersisterObject().load(id));
 	}
 }
