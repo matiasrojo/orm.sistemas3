@@ -5,20 +5,11 @@ import persistencia.ServiceLocator;
 public class Main {
 
 	public static void main(String[] args) {
+
+		Vista vista = new Vista();
+		vista.setVisible(true);
 		
-		ServiceLocator.getInstance().selectPersisterObject("Firebird");
-		
-		System.out.println("\nPROGRAMA> levantando al usuario con ID = " + 1 + " ..." );
-		
-		Persona personita = (Persona) new Persona().load(1);
-		
-		System.out.println("\nPROGRAMA> usuario " + personita.getName() + " levantado.");
-		System.out.println("\nPROGRAMA> " + personita.getName() + " " + personita.getLastname());
-		
-		Persona personita2 = (Persona) new Persona().load(2);
-		
-		System.out.println("\nPROGRAMA> usuario " + personita2.getName() + " levantado.");
-		System.out.println("\nPROGRAMA> " + personita2.getName() + " " + personita2.getLastname());
+		ServiceLocator.getInstance().selectPersisterObject("Firebird");	
 		
 		//Perro perro = new Perro("Zack", personita2);
 		
