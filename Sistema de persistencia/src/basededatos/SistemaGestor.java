@@ -48,7 +48,7 @@ public class SistemaGestor implements IMedio {
 		
 		try {
 			
-			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo la tupla con ID = " + id + " ..." );
+			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo la tupla con ID = " + id + " de la tabla " + tableName);
 			
 			Statement statement = this.connectDB().createStatement();
 			ResultSet rs = null;
@@ -85,8 +85,9 @@ public class SistemaGestor implements IMedio {
 		return respond;
 	}
 	
-	public void save(String tableName, ArrayList<Atributo> campos, int id) {
+	public boolean save(String tableName, ArrayList<Atributo> campos, int id) {
 		Connection connection = null;
+		boolean succesfully = false;
 		
 		try {
 			connection = this.connectDB();
@@ -114,6 +115,8 @@ public class SistemaGestor implements IMedio {
 			statement.addBatch(query);
 			statement.executeBatch();
 			connection.commit();
+			
+			succesfully = true;
 		} catch(SQLException ex) {
 			System.err.println("SQLException: " + ex.getMessage());
 		} finally {
@@ -124,10 +127,39 @@ public class SistemaGestor implements IMedio {
 				e.printStackTrace();
 			}
 		}
+		
+		return succesfully;
 	}
 
 	@Override
 	public String getName() {
 		return this.sgbdname;
+	}
+
+	@Override
+	public int getLastId(String tableName) {
+		int lastId = 0;
+		try {
+			
+			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo el último ID en la tabla " + tableName);
+			
+			Statement statement = this.connectDB().createStatement();
+			ResultSet rs = null;
+			
+			rs = statement.executeQuery("SELECT ID FROM " + tableName + " ORDER BY ID DESC;");
+			
+			rs.next();
+			
+			lastId = rs.getInt("ID");
+		} catch (SQLException ex) {
+			System.out.println(ex);
+		}
+		
+		return lastId;
+	}
+	
+	public boolean delete(String tableName, int id) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

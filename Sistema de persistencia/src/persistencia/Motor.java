@@ -4,8 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 public abstract class Motor {
-
-	public static int id = 0;
 	private ServiceLocator proveedor;
 	private String childTableName;
 	private int instanceId;
@@ -13,15 +11,14 @@ public abstract class Motor {
 	
 	public Motor()
 	{
-		this.getChildTableName();
+		this.childTableName = this.getChildTableName();
 		this.proveedor = ServiceLocator.getInstance();
-		Motor.id += 1;
-		this.instanceId = Motor.id;
+		this.instanceId = this.proveedor.getPersisterObject().getLastId(this.childTableName) + 1;
 	}
 	
-	private void getChildTableName()
+	private String getChildTableName()
 	{
-		this.childTableName = this.getClass().getAnnotation(Table.class).name();
+		return this.getClass().getAnnotation(Table.class).name();
 	}
 
 	private ArrayList<Atributo> getChildAttributes()
@@ -58,16 +55,26 @@ public abstract class Motor {
 				 * Hay que hacer esta validaci�n, ya que la reflexi�n no conoce
 				 * los atributos protected del hijo
 				 */
-				if (attribute.getName().equals("id"))
-				{
+				if (!attribute.getName().equals("id"))
+				/*{
 					//this.getClass().getSuperclass().getDeclaredField("instanceId").set(this, attribute.getValue());
 				}
-				else
+				else*/
 				{
 					Field field = this.getClass().getDeclaredField(attribute.getName());
 					
 					field.setAccessible(true);
-					field.set(this, attribute.getValue());
+					
+					//Esto es horrible pero no encontre otra forma
+					String clase = field.getType().toString().substring(6);
+					Object instancia = Motor.getInstance(clase);
+					
+					if(instancia instanceof Motor) {
+						instancia = ((Motor) instancia).load((Integer) attribute.getValue());
+						field.set(this, instancia);
+					} else {
+						field.set(this, attribute.getValue());
+					}
 				}
 
 			} catch (IllegalArgumentException |  NoSuchFieldException | SecurityException e) {
@@ -94,5 +101,16 @@ public abstract class Motor {
 	
 	public int getInstanceId() {
 		return this.instanceId;
+	}
+	
+	public static Object getInstance(String clase) {
+		Object o = null;
+
+		try {
+			o = Class.forName(clase).newInstance();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return o;
 	}
 }
