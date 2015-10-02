@@ -87,9 +87,25 @@ public abstract class Motor {
 		}
 	}
 
-	public void save()
+	public boolean save()
 	{
-		this.proveedor.getPersisterObject().save(this.childTableName, this.getChildAttributes(), this.instanceId);
+		if(this.proveedor.getPersisterObject().save(this.childTableName, this.getChildAttributes(), this.instanceId)){
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean delete(int id)
+	{
+		if(this.proveedor.getPersisterObject().delete(this.childTableName, id)){
+			return true;
+		}
+		else {
+			return false;
+		}
+		
 	}
 
 	public Motor load(int id)

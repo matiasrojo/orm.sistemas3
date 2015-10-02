@@ -141,7 +141,7 @@ public class SistemaGestor implements IMedio {
 		int lastId = 0;
 		try {
 			
-			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo el Ãºltimo ID en la tabla " + tableName);
+			System.out.println("\n" + this.sgbdname.toUpperCase() + "> obteniendo el último ID en la tabla " + tableName);
 			
 			Statement statement = this.connectDB().createStatement();
 			ResultSet rs = null;
@@ -159,7 +159,33 @@ public class SistemaGestor implements IMedio {
 	}
 	
 	public boolean delete(String tableName, int id) {
-		// TODO Auto-generated method stub
-		return false;
+		Connection connection = null;
+		boolean succesfully = false;
+		
+		try {
+			connection = this.connectDB();
+			connection.setAutoCommit(false);
+			Statement statement = connection.createStatement();
+			
+			String query = "DELETE FROM " + tableName + " WHERE ID = " + id;
+			
+			System.out.println("\nBorrando objeto " + tableName);
+			statement.addBatch(query);
+			statement.executeBatch();
+			connection.commit();
+			
+			succesfully = true;
+		} catch(SQLException ex) {
+			System.err.println("SQLException: " + ex.getMessage());
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return succesfully;
 	}
 }
