@@ -129,7 +129,8 @@ public class Vista extends JFrame implements ActionListener {
 				labelOperation.setText("Introduzca datos");			
 			}
 			else {
-				savePerson (textName.getText(), textLastName.getText());			
+				int id = this.savePerson (textID.getText().equals("")?0:Integer.parseInt(textID.getText()), textName.getText(), textLastName.getText());			
+				textID.setText(Integer.toString(id));
 			}
 		}
 		
@@ -151,7 +152,8 @@ public class Vista extends JFrame implements ActionListener {
 				labelOperation.setText("Introduzca datos");			
 			}
 			else {
-				saveDog (textName.getText(), textLastName.getText(), textDogName.getText());
+				int dogId = saveDog (textDogID.getText().equals("")?0:Integer.parseInt(textDogID.getText()), textID.getText().equals("")?0:Integer.parseInt(textID.getText()), textName.getText(), textLastName.getText(), textDogName.getText());
+				textDogID.setText(Integer.toString(dogId));
 			}
 		}
 		
@@ -199,12 +201,15 @@ public class Vista extends JFrame implements ActionListener {
 		
 	}
 	
-	private void savePerson(String name, String lastName) {
+	private int savePerson(int id, String name, String lastName) {
 		
 		Persona person = new Persona();
 		
 		person.setName(name);
 		person.setLastname(lastName);
+		if(id != 0)
+			person.setId(id);
+		
 		if (person.save()) {
 			labelOperation.setText("Objeto persistido");
 		}
@@ -212,6 +217,7 @@ public class Vista extends JFrame implements ActionListener {
 			labelOperation.setText("Error al persistir objeto");
 		}
 		
+		return person.getInstanceId();
 	}
 	
 	private void loadPerson (int id) {
@@ -232,15 +238,19 @@ public class Vista extends JFrame implements ActionListener {
 		labelOperation.setText("Objeto recuperado (Persona ID:" + id + ")");
 	}
 	
-	private void saveDog(String ownerName, String ownerLastName, String dogName) {
+	private int saveDog(int dogId, int ownerId, String ownerName, String ownerLastName, String dogName) {
 		
 		Persona person = new Persona();
 		person.setName(ownerName);
 		person.setLastname(ownerLastName);
+		if(ownerId != 0)
+			person.setId(ownerId);
 		
 		Perro dog = new Perro();
 		dog.setName(dogName);
 		dog.setDuenio(person);
+		if(dogId != 0)
+			dog.setId(dogId);
 		
 		if (person.save() && dog.save()) {
 			labelOperation.setText("Objetos persistidos");
@@ -249,6 +259,7 @@ public class Vista extends JFrame implements ActionListener {
 			labelOperation.setText("Error al persistir objetos");
 		}
 		
+		return dog.getInstanceId();
 	}
 	
 	private void loadDog (int id) {
@@ -260,7 +271,7 @@ public class Vista extends JFrame implements ActionListener {
 		textDogName.setText(dog.getName());
 		textName.setText(dog.getDuenio().getName());
 		textLastName.setText(dog.getDuenio().getLastname());
-		textID.setText("");
+		textID.setText(Integer.toString(dog.getDuenio().getInstanceId()));
 		labelOperation.setText("Objeto recuperado (Perro ID:" + id + ")");
 	}
 	

@@ -4,7 +4,7 @@
 	    <parameter name="sgbdname" type="java.lang.String" value="Firebird" />
             <parameter name="driver" type="java.lang.String" value="org.firebirdsql.jdbc.FBDriver" />
             <parameter name="connectionstring" type="java.lang.String" value="jdbc:firebirdsql://localhost/" />
-            <parameter name="dbname" type="java.lang.String" value="persona" />
+            <parameter name="dbname" type="java.lang.String" value="C:\Users\Rafa\Desktop\Sistemas 3\Sistema de persistencia\src\basededatos\PERSONA.FDB" />
             <parameter name="user" type="java.lang.String" value="sysdba" />
             <parameter name="password" type="java.lang.String" value="masterkey" />
       </instance>

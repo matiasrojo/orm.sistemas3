@@ -129,4 +129,8 @@ public abstract class Motor {
 		}
 		return o;
 	}
+	
+	public void setId(int id) {
+		this.instanceId = id;
+	}
 }
